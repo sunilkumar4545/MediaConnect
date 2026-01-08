@@ -1,0 +1,36 @@
+<div class="admin-movies-container">
+    <div class="header">
+        <h2>Movies</h2>
+        <button class="btn-primary" (click)="addMovie()">+ Add New Movie</button>
+    </div>
+
+    <div *ngIf="loading" class="loading">Loading movies...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+
+    <div class="table-container" *ngIf="!loading && !error">
+        <div *ngIf="movies.length === 0" class="no-data">
+            <p>No movies found. Click "Add New Movie" above to create one.</p>
+        </div>
+        <table *ngIf="movies.length > 0">
+            <thead>
+                <tr>
+                    <th>TITLE</th>
+                    <th>YEAR</th>
+                    <th>GENRE</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let movie of movies">
+                    <td>{{ movie.title }}</td>
+                    <td>{{ movie.releaseYear }}</td>
+                    <td>{{ movie.genres }}</td>
+                    <td class="actions">
+                        <button class="btn-edit" (click)="editMovie(movie.id!)">Edit</button>
+                        <button class="btn-delete" (click)="deleteMovie(movie.id!)">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

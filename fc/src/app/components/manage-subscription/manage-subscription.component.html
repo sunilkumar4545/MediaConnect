@@ -1,0 +1,119 @@
+<div class="container my-5">
+  @if(isSubscribed() && authService.currentUser()?.user; as user) {
+  <!-- Current Subscription Details -->
+  <div class="row">
+    <div class="col-12">
+      <h1 class="h3 mb-4">Manage Your Subscription</h1>
+    </div>
+  </div>
+
+  <!-- Subscription Status Card -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body p-4">
+      <div class="row">
+        <!-- Left Column: Plan Details -->
+        <div class="col-12">
+          <h2 class="h4 mb-3">Current Plan: <span class="text-primary">{{ user.currentPlan }}</span></h2>
+          <div class="mb-3">
+            <span class="badge rounded-pill bg-success px-3 py-2 text-uppercase" style="font-size: 0.9rem;">
+              {{ user.subscriptionStatus }}
+            </span>
+          </div>
+
+          <div class="d-flex flex-column gap-2 text-muted">
+            <div>
+              <strong>Subscription ID:</strong> <span class="text-dark">sub_{{ user.id }}_xm9v</span>
+            </div>
+            <div>
+              <strong>Started On:</strong> <span class="text-dark">{{ formatDate(user.subscriptionExpiry) }}
+                (Renewed)</span>
+            </div>
+            <div>
+              <strong>Expires On:</strong> <span class="text-dark">{{ formatDate(user.subscriptionExpiry) }}</span>
+            </div>
+            <div>
+              <strong>Days Remaining:</strong>
+              <span [ngClass]="getDaysRemaining() < 7 ? 'text-danger fw-bold' : 'text-success fw-bold'">
+                {{ getDaysRemaining() }} days
+              </span>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center text-muted">
+    <p>Thank you for being a valued member of MediaConnect!</p>
+  </div>
+  } @else {
+  <!-- Plan Selection -->
+  <h1 class="h3 text-center mb-2">Choose Your Plan</h1>
+  <p class="text-center text-muted mb-4">Cancel anytime. No commitments.</p>
+
+  @if(successMessage()) {
+  <div class="alert alert-success" role="alert">
+    <h4 class="alert-heading">Success</h4>
+    <p class="mb-0">{{ successMessage() }}</p>
+  </div>
+  }
+
+  <!-- Plan Cards Grid -->
+  <div class="row g-4 mb-4">
+    @for(plan of plans; track plan.name) {
+    <div class="col-12 col-md-4">
+      <div class="card h-100 text-center plan-card" [class.selected]="selectedPlan() === plan.name"
+        (click)="selectPlan(plan.name)">
+        <div class="card-body">
+          <h2 class="h4 mb-3">{{ plan.name }}</h2>
+          <p class="display-5 text-primary mb-3">
+            ₹{{ plan.price }}
+            <small class="text-muted fs-6">/month</small>
+          </p>
+          <ul class="list-unstyled text-muted">
+            @for(feature of plan.features; track feature) {
+            <li class="mb-2">{{ feature }}</li>
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+
+  <!-- Payment Form -->
+  @if(selectedPlan()) {
+  <div class="card shadow-sm mt-4">
+    <div class="card-body p-4">
+      <h2 class="h4 text-center mb-4">Complete Payment for {{ selectedPlan() }} Plan</h2>
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> This is a mock payment gateway. Enter any details to proceed.
+          </div>
+          <div class="mb-3">
+            <label class="form-label">UPI ID / Card Number</label>
+            <input type="text" placeholder="user@upi or Card Number" [(ngModel)]="cardNumber" class="form-control">
+          </div>
+          <div class="row g-3 mb-4">
+            <div class="col-6">
+              <label class="form-label">Expiry (if card)</label>
+              <input type="text" placeholder="MM/YY" [(ngModel)]="expiryDate" class="form-control">
+            </div>
+            <div class="col-6">
+              <label class="form-label">CVC / PIN</label>
+              <input type="text" placeholder="***" [(ngModel)]="cvc" class="form-control">
+            </div>
+          </div>
+          <button (click)="processPayment()" class="btn btn-primary w-100">
+            Pay & Subscribe
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+  }
+</div>

@@ -1,0 +1,58 @@
+<div class="admin-dashboard">
+    <header class="dashboard-header">
+        <h1>Admin Dashboard</h1>
+        <button class="btn-logout" (click)="logout()">Logout</button>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn" [class.active]="activeTab === 'users'" (click)="activeTab = 'users'">
+            Users ({{users.length}})
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'content'" (click)="activeTab = 'content'">
+            Content (Movies)
+        </button>
+        <button class="tab-btn" [class.active]="activeTab === 'analytics'" (click)="activeTab = 'analytics'">
+            Engagement Analytics
+        </button>
+    </div>
+
+    <div class="tab-content">
+        <!-- Users Tab -->
+        <div *ngIf="activeTab === 'users'" class="content-section">
+            <h3>Users</h3>
+            <div *ngIf="loading" class="loading">Loading users...</div>
+            <div *ngIf="error" class="error">{{ error }}</div>
+
+            <div class="table-card" *ngIf="!loading && !error">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>NAME</th>
+                            <th>EMAIL</th>
+                            <th>ROLE</th>
+                            <th>SUBSCRIPTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let user of users">
+                            <td>{{ user.fullName }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.role }}</td>
+                            <td>{{ user.subscriptionStatus || 'NONE' }} ({{ user.currentPlan || 'NONE' }})</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Content Tab -->
+        <div *ngIf="activeTab === 'content'" class="content-section">
+            <app-admin-movies></app-admin-movies>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div *ngIf="activeTab === 'analytics'" class="content-section">
+            <app-analytics></app-analytics>
+        </div>
+    </div>
+</div>

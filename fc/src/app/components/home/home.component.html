@@ -1,0 +1,83 @@
+<div class="container py-5">
+
+    <!-- Search Bar Container -->
+    <div class="card border-0 shadow-sm p-3 mb-5 rounded-4 bg-white">
+        <div class="row g-3 align-items-center">
+            <!-- Search Input -->
+            <div class="col-md-5">
+                <input type="text" class="form-control border-0 bg-light" placeholder="Search..."
+                    [(ngModel)]="searchQuery" (keyup.enter)="search()" style="height: 48px;">
+            </div>
+
+            <!-- Genre Dropdown -->
+            <div class="col-md-2">
+                <select class="form-select border-0 bg-light" (change)="filterGenre($event)" style="height: 48px;">
+                    <option value="">All Genres</option>
+                    <option *ngFor="let g of genres" [value]="g">{{g}}</option>
+                </select>
+            </div>
+
+            <!-- Language Dropdown -->
+            <div class="col-md-3">
+                <select class="form-select border-0 bg-light" (change)="filterLanguage($event)" style="height: 48px;">
+                    <option value="">All Languages</option>
+                    <option *ngFor="let lang of languages" [value]="lang">{{lang}}</option>
+                </select>
+            </div>
+
+            <!-- Reset/Search Button -->
+            <div class="col-md-2">
+                <button class="btn btn-light w-100 fw-bold border" (click)="clearSearch()"
+                    style="height: 48px; color: #333;">
+                    Reset
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div *ngIf="!isSearching">
+        <!-- Continue Watching Section -->
+        <div *ngIf="continueWatching.length > 0" class="mb-5">
+            <h4 class="fw-bold mb-4">Continue Watching</h4>
+            <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-4">
+                <div class="col" *ngFor="let movie of continueWatching">
+                    <app-movie-card [movie]="movie"></app-movie-card>
+                    <!-- Simple progress bar overlay could go here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Trending Section -->
+        <!--
+        <h4 class="fw-bold mb-4">Trending Now</h4>
+        <div class="row row-cols-3 row-cols-md-5 row-cols-lg-6 g-3 mb-5">
+            <div class="col" *ngFor="let movie of trendingMovies">
+                <app-movie-card [movie]="movie"></app-movie-card>
+            </div>
+        </div>
+        -->
+
+        <!-- Popular Section -->
+        <h4 class="fw-bold mb-4">Popular Movies</h4>
+        <div class="row row-cols-3 row-cols-md-5 row-cols-lg-6 g-3 mb-5">
+            <div class="col" *ngFor="let movie of popularMovies">
+                <app-movie-card [movie]="movie"></app-movie-card>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Results -->
+    <div *ngIf="isSearching">
+        <h4 class="fw-bold mb-4">Results for "{{searchQuery}}"</h4>
+        <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-4">
+            <div class="col" *ngFor="let movie of searchResults">
+                <app-movie-card [movie]="movie"></app-movie-card>
+            </div>
+        </div>
+        <div class="text-center mt-5" *ngIf="searchResults.length === 0">
+            <p class="text-muted">No movies found.</p>
+        </div>
+    </div>
+
+</div>

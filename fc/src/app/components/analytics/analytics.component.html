@@ -1,0 +1,30 @@
+<div class="analytics-container">
+    <h2>Engagement Analytics</h2>
+    <p class="description">This shows which movies are most popular based on how many users have watched them.</p>
+
+    <div *ngIf="loading" class="loading">Loading analytics...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+
+    <div class="table-card" *ngIf="!loading && !error">
+        <table class="table table-striped table-hover table-dark">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Movie Name</th>
+                    <th>Genre</th>
+                    <th>Language</th>
+                    <th>Total Watchers</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of analyticsData; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ item.movieTitle }}</td>
+                    <td>{{ item.genre }}</td>
+                    <td>{{ item.language }}</td>
+                    <td>{{ item.totalWatchers }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

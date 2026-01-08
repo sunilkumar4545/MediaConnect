@@ -1,0 +1,97 @@
+<div class="container my-5">
+    <div class="d-flex align-items-center mb-4">
+        <h1 class="h3 mb-0">My Profile</h1>
+        <a routerLink="/home" class="ms-auto text-decoration-none small fw-bold">Back to Home</a>
+    </div>
+
+    @if(loading) {
+    <div class="text-center p-5">
+        <div class="spinner-border text-primary" role="status"></div>
+    </div>
+    } @else if(user) {
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <!-- Existing profile details code matches previous state, ensuring it is preserved -->
+            <div class="row g-4">
+                <!-- Name & Email (Editable) -->
+                <div class="col-md-6">
+                    <label class="text-muted small fw-bold mb-1">Full Name</label>
+                    @if(isEditing) {
+                    <input type="text" [(ngModel)]="editData.fullName" class="form-control"
+                        placeholder="Enter Full Name">
+                    } @else {
+                    <div class="fs-5">{{ user.fullName }}</div>
+                    }
+                </div>
+                <div class="col-md-6">
+                    <label class="text-muted small fw-bold mb-1">Email Address</label>
+                    @if(isEditing) {
+                    <input type="email" [(ngModel)]="editData.email" class="form-control" placeholder="Enter Email">
+                    } @else {
+                    <div class="fs-5">{{ user.email }}</div>
+                    }
+                </div>
+
+                <!-- Subscription & Plan -->
+                <div class="col-md-6">
+                    <label class="text-muted small fw-bold mb-1">Subscription Status</label>
+                    <div class="fs-5 fw-bold"
+                        [ngClass]="user.subscriptionStatus === 'ACTIVE' ? 'text-success' : 'text-danger text-uppercase'">
+                        {{ user.subscriptionStatus || 'NONE' }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="text-muted small fw-bold mb-1">Current Plan</label>
+                    <div class="fs-5 text-uppercase">{{ user.currentPlan || 'NONE' }}</div>
+                    @if(user.subscriptionStatus === 'ACTIVE') {
+                    <div class="small text-muted mt-1">Expires: {{ formatDate(user.subscriptionExpiry) }}</div>
+                    }
+                </div>
+
+                <!-- Genres -->
+                <div class="col-12">
+                    <label class="text-muted small fw-bold mb-2">Genre Preferences</label>
+                    @if(isEditing) {
+                    <div class="alert alert-light border p-2 mb-0 small">
+                        Genre editing not enabled for quick edit.
+                    </div>
+                    }
+                    <div class="d-flex flex-wrap gap-2 mt-2">
+                        @for(genre of getGenresList(); track genre) {
+                        <span class="badge bg-primary px-3 py-2 rounded-pill">{{ genre }}</span>
+                        } @empty {
+                        <span class="text-muted fst-italic">No preferences set</span>
+                        }
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="col-12 mt-3 d-flex gap-2">
+                    @if(isEditing) {
+                    <button class="btn btn-success px-4 rounded-pill" (click)="saveProfile()">Save Changes</button>
+                    <button class="btn btn-outline-secondary px-4 rounded-pill" (click)="cancelEdit()">Cancel</button>
+                    } @else {
+                    <button class="btn btn-primary px-4 rounded-pill" (click)="startEdit()">Edit Profile</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Section -->
+    @if(watchHistory.length > 0) {
+    <div class="mt-5">
+        <h4 class="fw-bold mb-3">Watch History</h4>
+        <!-- Using smaller grid columns to make cards appear smaller as requested -->
+        <div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-4">
+            @for(movie of watchHistory; track movie.id) {
+            <div class="col">
+                <app-movie-card [movie]="movie"
+                    ></app-movie-card>
+            </div>
+            }
+        </div>
+    </div>
+    }
+    }
+</div>

@@ -1,0 +1,71 @@
+@if (loading()) {
+<div class="text-center py-8">
+  <p class="text-gray-500">Loading movie details...</p>
+</div>
+} @else if (error()) {
+<div class="text-center py-8">
+  <p class="text-red-500 mb-4">{{ error() }}</p>
+  <a routerLink="/home" class="inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded">
+    Go Back to Home
+  </a>
+</div>
+} @else if (movie()) {
+@if (movie(); as m) {
+<div class="container my-4">
+  <div class="card shadow-sm">
+    <div class="card-body p-4">
+      <!-- Movie Title and Meta -->
+      <div class="mb-4">
+        <h1 class="h2 mb-2">{{ m.title }}</h1>
+        <div class="d-flex align-items-center gap-3 text-muted small">
+          <span>{{ m.releaseYear }}</span>
+          <span>&bull;</span>
+          <span>{{ m.duration }}</span>
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          <span class="badge bg-secondary">{{ m.genres }}</span>
+        </div>
+      </div>
+
+      <!-- Poster and Video Side by Side -->
+      <div class="row g-4 mb-4">
+        <!-- Movie Poster -->
+        <div class="col-12 col-lg-4">
+          <img [src]="m.posterUrl" [alt]="m.title" width="400" height="600" class="img-fluid rounded shadow-sm">
+        </div>
+
+        <!-- Video Player / Subscription -->
+        <div class="col-12 col-lg-8">
+          @if (authService.hasActiveSubscription()) {
+          <div class="video-container">
+            <h3 class="h5 mb-3">Watch Now</h3>
+            <video #videoPlayer (timeupdate)="saveProgress($event)" (pause)="onPause($event)"
+              (ended)="onMovieEnded($event)" class="video-player" controls>
+              <source [src]="getVideoUrl(m.videoPath)" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+          } @else {
+          <div class="alert alert-info h-100 d-flex flex-column justify-content-center">
+            <h3 class="h5">Subscription Required</h3>
+            <p class="mb-3">You need an active subscription to watch this movie.</p>
+            <div>
+              <a routerLink="/manage-subscription" class="btn btn-primary">
+                Subscribe Now
+              </a>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- Movie Description -->
+      <div class="mt-4">
+        <h3 class="h5 mb-3">Description</h3>
+        <p class="text-muted">{{ m.description }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+}
+}

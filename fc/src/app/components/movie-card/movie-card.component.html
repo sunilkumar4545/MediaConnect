@@ -1,0 +1,13 @@
+<div class="movie-card" [routerLink]="['/movie', movie.id]" style="cursor: pointer;">
+    <div class="movie-poster position-relative">
+        <img [src]="movie.posterUrl" [alt]="movie.title" loading="lazy">
+
+
+    </div>
+    <div class="mt-2">
+        <h6 class="movie-title" [title]="movie.title">{{ movie.title }}</h6>
+        <p class="movie-info mb-0">
+            {{ movie.releaseYear }} • {{ movie.duration }}
+        </p>
+    </div>
+</div>
